@@ -3,9 +3,79 @@ Zariadenie ktoré zbiera údaje o hmotnosti včelieho úľa každých 15 min. Mo
 
 ## Architektúra systému
 ```text
-                                                                                                        
                                                                                                               CENTRÁLNY SERVER (Raspberry Pi 4B)
-  ESP 32 (Úľová váha)                         ESP 32 (Gateway)                                                    
-   SEN-10245 50 kg       LoRa (868 MHz)        - Príjem dát z LoRa         MQTT (Port 1883)        Mosquitto Broker   ----->               ThingsBoard
-   BME 280              --------------->       - Pripojenie na WiFi        --------------->           (MQTT server)               (PostgreSQL db + Web Dashboard)
-  
+                                                                                                                           ThingsBoard
+  ESP 32 (Úľová váha)                         ESP 32 (Gateway)                                         Dátová vrstva                  Prezentacná vrstva
+   SEN-10245 50 kg       LoRa (868 MHz)        - Príjem dát z LoRa       HTTP POST (Port 8080)      Integrovaná databáza   ----->        Web Dashboard
+   BME 280              --------------->       - Pripojenie na WiFi      -------------------->         (PostgreSQL)                          Grafy
+                                               - Konverzia na JSON
+```
+## Použitý hardvér a senzory
+
+|Komponent|Popis|
+|-------|--------|
+|ESP 32-WROOM-32D|hlavná jednotka na zber údajov zo senzorov|
+|ESP 32-WROOM-32D|vnútorná prijímacia jednotka, gateway|
+|Raspberry Pi 4 Model B - 4GB RAM|zariadenie kde beží databáza a ThingsBoard|
+|BME 280|senzor na meranie teploty, vlhkosti a atmosférického tlaku|
+|SEN-10245 50 kg|4x hmotnostný deformačný senzor|
+|AD Prevodník HX711|prevedenie analógového signálu zo senzorov hmotnosti na digitálny signál| 
+|SX1276 Lora 868 MHz|komunikačný modul na bezdrôtové posielanie údajov zo senzora
+
+## Inštalácia Raspberry Pi
+### 1. Inštalácia OS
+Nainštaluj si na SD kartu operačný systém Raspberry Pi OS Lite (64-bit) pomocou programu Raspberry Pi Imager. Po nainštalovaní vlož SD kartuž do Raspberry Pi a spusti ho. Následne sa pripoj na Raspberry Pi cez SSH.
+```
+# aktualizuj systém
+sudo apt update && sudo apt upgrade -y
+
+```
+### 2. Inštalácia platformy ThingsBoard 
+```
+# inštalacia Java 21
+sudo apt install openjdk-21-jdk -y
+
+# stiahni si inštalačný balík
+wget https://github.com/thingsboard/thingsboard/releases/download/v4.3.1.1/thingsboard-4.3.1.1.deb
+
+# nainštaluj ThingsBoard
+sudo dpkg -i thingsboard-4.3.1.1.deb
+```
+### 3. Inštalácia databázy
+```
+# nainštaluj PostgreSQL
+sudo apt install postgresql postgresql-contrib -y
+
+# spusť databázu a nastav, aby sa zapla sama po každom štarte
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# vytvor databázu
+sudo -u postgres psql
+CREATE DATABASE thingsboard;
+\q
+# prepoj ThingsBoard s databázou
+sudo nano /etc/thingsboard/conf/thingsboard.conf
+# na koniec nakopíruj tieto riadky a ulož
+export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/thingsboard
+export SPRING_DATASOURCE_USERNAME=postgres
+
+# spusti finálnu inštaláciu
+sudo /usr/share/thingsboard/bin/install/install.sh --loadDemo
+
+# spustenie ThingsBoard a nastavenie automatického štartu
+sudo systemctl start thingsboard
+sudo systemctl enable thingsboard
+```
+
+## Prístup na ThingsBoard
+Prístup je cez webový prehliadač (na lokálnej sieti) na adrese
+```
+http://<IP Raspberry Pi>:8080
+```
+
+## Nahranie firmvéru do ESP jednotiek
+Poziadavky:
+-Arduino IDE
+-Knižnice: 
+

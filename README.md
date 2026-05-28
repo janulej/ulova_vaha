@@ -91,7 +91,7 @@ Formát správy poslanej z ESP 1 (úľ) do ESP 2 (gateway) je (LoRa)
 ```
 42.53,21.45,58.20,1013.25
 ```
-Správa je čo najmenšia aby nedochádzalo k starte dát. ESP 2 vie, že hodnoty prišli v poradí váha, teplota, vlhkosť, tlak.
+Správa je čo najmenšia aby nedochádzalo k starte dát. ESP 2 vie, že hodnoty prišli v poradí váha, teplota, vlhkosť, tlak. Správa sa posiela každých 15 min.
 
 Formát správy odoslanej z ESP 2 (gateway) do Raspberry Pi je (JSON)
 ```
@@ -102,4 +102,5 @@ Formát správy odoslanej z ESP 2 (gateway) do Raspberry Pi je (JSON)
   "tlak": 1013.25
 }
 ```
+Správa sa posiela hneď po príde z ESP 1 (úľ).
 Jenotky k jednotlivým veličinám sú nastavené staticky v ThingsBoard pri tvorbe grafu.

@@ -130,7 +130,7 @@ void setup() {
   Serial.println("Odosielam paket cez LoRa...");
 
   LoRa.beginPacket();
-  LoRa.print(vahaUla, 3); 
+  LoRa.print(vahaUla, 2); 
   LoRa.print(",");
   LoRa.print(teplota);
   LoRa.print(",");

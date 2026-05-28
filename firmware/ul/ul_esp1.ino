@@ -24,8 +24,7 @@ const int eeprom_tareOffset_address = 4;
 #define MOSI_LORA 25
 #define SS_LORA   32
 #define RST_LORA  26
-#define DIO0_LORA 27
-#define LED_PIN   2 
+#define DIO0_LORA 27 
 
 // BME280 nastavenie
 Adafruit_BME280 bme; 
@@ -41,7 +40,6 @@ void setup() {
 
   // Nastavenie prebúdzania časovačom
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-  pinMode(LED_PIN, OUTPUT);
 
   // Inicializácia BME280
   if (!bme.begin(0x76)) { 
@@ -126,7 +124,6 @@ void setup() {
   LoRa.enableCrc();
 
   // Odoslanie dát cez LoRa
-  digitalWrite(LED_PIN, HIGH);
   Serial.println("Odosielam paket cez LoRa...");
 
   LoRa.beginPacket();
@@ -139,7 +136,6 @@ void setup() {
   LoRa.print(tlak);
   LoRa.endPacket();
   
-  digitalWrite(LED_PIN, LOW);
   Serial.println("Dáta úspešne odoslané.");
   Serial.flush(); 
   

@@ -4,12 +4,16 @@ Zariadenie ktoré zbiera údaje o hmotnosti včelieho úľa každých 15 min. Mo
 ---
 ## Architektúra systému
 ```text
-                                                                                                              CENTRÁLNY SERVER (Raspberry Pi 4B)
-                                                                                                                           ThingsBoard
-  ESP 32 (Úľová váha)                         ESP 32 (Gateway)                                         Dátová vrstva                  Prezentacná vrstva
-   SEN-10245 50 kg       LoRa (868 MHz)        - Príjem dát z LoRa       HTTP POST (Port 8080)      Integrovaná databáza   ----->        Web Dashboard
-   BME 280              --------------->       - Pripojenie na WiFi      -------------------->         (PostgreSQL)                          Grafy
-                                               - Konverzia na JSON
+                                                                                                   ┌────────────────────────────────────────────────────────┐
+┌─────────────────────────┐                  ┌──────────────────────────────────┐                  │           CENTRÁLNY SERVER (Raspberry Pi 4B)           │
+|   ESP 32 (Úľová váha)   |                  │         ESP 32 (Gateway)         │                  ├────────────────────────────────────────────────────────┤
+├─────────────────────────┤                  ├──────────────────────────────────┤                  │                      ThingsBoard                       │
+│  Senzory:               │  LoRa (868 MHz)  │  • Príjem dát z LoRa             │    HTTP POST     │  ┌───────────────────────┐      ┌───────────────────┐  │
+│  - SEN-10245 (50 kg)    │ ───────────────> │  • Pripojenie na WiFi            │  ──────────────> │  │     Dátová vrstva     │      │Prezentačná vrstva │  │
+│  - BME 280              │                  │  • Konverzia dát na formát JSON  │   (Port 8080)    │  │ Integrovaná databáza  │ ───> │   Web Dashboard   │  │
+└─────────────────────────┘                  └──────────────────────────────────┘                  │  │     (PostgreSQL)      │      │       Grafy       │  │
+                                                                                                   │  └───────────────────────┘      └───────────────────┘  │
+                                                                                                   └────────────────────────────────────────────────────────┘
 ```
 ---
 ## Použitý hardvér a senzory

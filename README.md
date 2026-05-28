@@ -1,6 +1,7 @@
 # Úľová váha
 Zariadenie ktoré zbiera údaje o hmotnosti včelieho úľa každých 15 min. Monitorovanie hmotnosti včelstva je pre včelára veľmi nápomocná. Včelár má prehľad o tom čo sa deje v úli bez toho aby fyzicky zasahoval do včelstva. Súčasťou zariadenia sú aj senzory na meranie teploty, vlhkosti a atmosférického tlaku pri včelnici.
 
+---
 ## Architektúra systému
 ```text
                                                                                                               CENTRÁLNY SERVER (Raspberry Pi 4B)
@@ -10,6 +11,7 @@ Zariadenie ktoré zbiera údaje o hmotnosti včelieho úľa každých 15 min. Mo
    BME 280              --------------->       - Pripojenie na WiFi      -------------------->         (PostgreSQL)                          Grafy
                                                - Konverzia na JSON
 ```
+---
 ## Použitý hardvér a senzory
 
 |Komponent|Popis|
@@ -20,8 +22,10 @@ Zariadenie ktoré zbiera údaje o hmotnosti včelieho úľa každých 15 min. Mo
 |BME 280|senzor na meranie teploty, vlhkosti a atmosférického tlaku|
 |SEN-10245 50 kg|4x hmotnostný deformačný senzor|
 |AD Prevodník HX711|prevedenie analógového signálu zo senzorov hmotnosti na digitálny signál| 
-|SX1276 Lora 868 MHz|komunikačný modul na bezdrôtové posielanie údajov zo senzora
+|SX1276 Lora 868 MHz|komunikačný modul na bezdrôtové posielanie údajov zo senzora|
+|NiceRF 868MHz|2x antána na LoRa moduly|
 
+---
 ## Inštalácia Raspberry Pi
 ### 1. Inštalácia OS
 Nainštaluj si na SD kartu operačný systém Raspberry Pi OS Lite (64-bit) pomocou programu Raspberry Pi Imager. Po nainštalovaní vlož SD kartuž do Raspberry Pi a spusti ho. Následne sa pripoj na Raspberry Pi cez SSH.
@@ -68,12 +72,7 @@ sudo systemctl start thingsboard
 sudo systemctl enable thingsboard
 ```
 
-## Prístup na ThingsBoard
-Prístup je cez webový prehliadač (na lokálnej sieti) na adrese
-```
-http://<IP Raspberry Pi>:8080
-```
-
+---
 ## Nahranie firmvéru do ESP jednotiek
 ### Poziadavky
 - Arduino IDE
@@ -86,6 +85,7 @@ Po nakalibrovaný môžeme nahrať do ESP finálny program. `firmware/ul/ul_esp1
 ### ESP 2 gateway
 Do druhého ESP ktoré je umiestnené v dome nahráme kód `firmware/vnutorne_esp/ulovavaha_esp2.ino`a spustíme ho.
 
+---
 ## Formát správ
 Formát správy poslanej z ESP 1 (úľ) do ESP 2 (gateway) je (LoRa)
 ```
@@ -104,3 +104,10 @@ Formát správy odoslanej z ESP 2 (gateway) do Raspberry Pi je (JSON)
 ```
 Správa sa posiela hneď po príde z ESP 1 (úľ).
 Jenotky k jednotlivým veličinám sú nastavené staticky v ThingsBoard pri tvorbe grafu.
+
+---
+## Prístup na ThingsBoard
+Prístup je cez webový prehliadač (na lokálnej sieti) na adrese
+```
+http://<IP Raspberry Pi>:8080
+```

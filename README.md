@@ -75,7 +75,31 @@ http://<IP Raspberry Pi>:8080
 ```
 
 ## Nahranie firmvéru do ESP jednotiek
-Poziadavky:
--Arduino IDE
--Knižnice: 
+### Poziadavky
+- Arduino IDE
+- Knižnice: `HX711_ADC`,`LoRa`,`Adafruit_BME280`
 
+### ESP 1 úľ
+Ako prvé je potrebné nahrať kalibračný kód do ESP a postupovať podľa požiadaviek v Serial monitore. `firmware/ul/kalibracia_vahy.ino`
+Po nakalibrovaný môžeme nahrať do ESP finálny program. `firmware/ul/ul_esp1.ino`
+
+### ESP 2 gateway
+Do druhého ESP ktoré je umiestnené v dome nahráme kód `firmware/vnutorne_esp/ulovavaha_esp2.ino`a spustíme ho.
+
+## Formát správ
+Formát správy poslanej z ESP 1 (úľ) do ESP 2 (gateway) je (LoRa)
+```
+42.53,21.45,58.20,1013.25
+```
+Správa je čo najmenšia aby nedochádzalo k starte dát. ESP 2 vie, že hodnoty prišli v poradí váha, teplota, vlhkosť, tlak.
+
+Formát správy odoslanej z ESP 2 (gateway) do Raspberry Pi je (JSON)
+```
+{
+  "vaha": 42.53,
+  "teplota": 21.45,
+  "vlhkost": 58.20,
+  "tlak": 1013.25
+}
+```
+Jenotky k jednotlivým veličinám sú nastavené staticky v ThingsBoard pri tvorbe grafu.

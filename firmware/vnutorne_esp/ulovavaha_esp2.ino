@@ -21,12 +21,10 @@ const char* access_token = "***";
 #define MOSI_LORA 25
 #define SS_LORA   32
 #define RST_LORA  26
-#define DIO0_LORA 27
-#define LED_PIN   2 
+#define DIO0_LORA 27 
 
 void setup() {
   Serial.begin(115200);
-  pinMode(LED_PIN, OUTPUT);
 
   // 1. Pripojenie k Wi-Fi
   WiFi.begin(ssid, password);
@@ -63,9 +61,7 @@ void loop() {
   // Skontrolujeme, či prišiel balík dát cez LoRa
   int packetSize = LoRa.parsePacket();
   
-  if (packetSize) {
-    digitalWrite(LED_PIN, HIGH); // Blikneme LED, že prijímame dáta
-    
+  if (packetSize) {    
     String prijataSprava = "";
 
     // Prečítame obsah balíka
@@ -136,7 +132,5 @@ void loop() {
     } else {
       Serial.println("Chyba: Neplatný formát dát z LoRa.");
     }
-
-    digitalWrite(LED_PIN, LOW);
   }
 }

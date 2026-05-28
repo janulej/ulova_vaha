@@ -86,6 +86,11 @@ Po nakalibrovaný môžeme nahrať do ESP finálny program. `firmware/ul/ul_esp1
 Do druhého ESP ktoré je umiestnené v dome nahráme kód `firmware/vnutorne_esp/ulovavaha_esp2.ino`a spustíme ho.
 
 ---
+## Import dashboard
+
+Prihlás sa do ThingsBoard a naimportuj dashboard `server/vcelnica.json`. 
+
+---
 ## Formát správ
 Formát správy poslanej z ESP 1 (úľ) do ESP 2 (gateway) je (LoRa)
 ```
@@ -110,4 +115,22 @@ Jenotky k jednotlivým veličinám sú nastavené staticky v ThingsBoard pri tvo
 Prístup je cez webový prehliadač (na lokálnej sieti) na adrese
 ```
 http://<IP Raspberry Pi>:8080
+```
+
+---
+## Štruktúra repozitára
+
+```
+├── docs/
+│   ├── Schema_zapojenia_ESP_1_ul.png
+│   └── Schema_zapojenia_ESP_2_gateway.png
+├── firmware/
+│   ├── uzol1/
+│   │   ├── kalibracia_vahy.ino
+│   │   └── uzol1.ino
+│   └── uzol2/
+│       └── uzol2.ino
+├── server/
+│   └── vcelnica.json
+└── README.md
 ```
